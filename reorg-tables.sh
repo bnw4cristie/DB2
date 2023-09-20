@@ -36,6 +36,10 @@
 #
 ##############################################################################
 
+# copy / edit following part and skip lines not needed
+
+exit 99;  # so running this script should fail
+
 db2 connect to tsmdb1 && \
 db2 "reorg table tsmdb1.ACTIVITY_LOG allow no access use REORG16K" && \
 db2 "reorg table tsmdb1.AF_BITFILES allow no access use REORG16K" && \
