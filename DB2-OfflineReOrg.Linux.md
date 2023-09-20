@@ -322,7 +322,7 @@ cd /OfflineReorg/tsmXYZ
 perl /OfflineReorg/bin/analyze_DB2_formulas.pl
 ```
 
-* free space as suggested
+* look for free space (Example)
 
 ```bash
 tsmXYZ@tsmhostX:/OfflineReorg/tsmXYZ> cat <newest folder>/summary.out 
