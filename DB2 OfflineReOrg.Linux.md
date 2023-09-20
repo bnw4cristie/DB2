@@ -42,10 +42,6 @@ As now this pad may be used by others, I added some sources at the bottom :-)
 
 # Short track for Linux Servers
 
-
-
-(2023) by tsm@bjoernsoe.net, bjoern.nachtwey@cristie.de
-
 ## Assumptions
 
 - the instance user is named `tsmXYZ` , 
@@ -94,13 +90,15 @@ tsmXYZ@tsmhostX:~> bash /OfflineReOrg/bin/db-selects.sh
             TSMMON_STATUS ;         3715341 ;          26.538 ;       292830496 ;        0.273 GB ;        16K
 ```
 
-CAUTION:
+**NOTICE**:
 
 - estimated times are completely inaccurate
 - estimated space requirement fits reasonably
 
-BEWARE:
-`ARCHIVE_OBJECTS` and `BACKUP_OBJECTS` are of size *32K*, `REPLICATED_OBJECTS` uses 8K!
+**BE AWARE**:
+
+- `ARCHIVE_OBJECTS` and `BACKUP_OBJECTS` are of size *32K*
+- `REPLICATED_OBJECTS` uses *8K*
 
 ## [ ] Stop any activity
 
@@ -201,7 +199,7 @@ db2 "reorg table tsmdb1.TSMMON_STATUS allow no access use REORG16K"
 
 Hints:
 
-1) use a `screen` for this operation, so connection issues will not interrupt the process and will not lead to a broken Db2
+1) use a `screen` [4] for this operation, so connection issues will not interrupt the process and will not lead to a broken Db2
 2) copy _trailing blank line_ also, so _all_ commands will be executed step-by-step
 
 ## [ ] Monitor ReOrg
@@ -393,102 +391,12 @@ q dbs
 
 [1] Analysis script as mentioned above: 
 
-* https://www.ibm.com/support/pages/sites/default/files/inline-files/$FILE/analyze_DB2_formulas_v1_14.zip
+* [Version 1.14](https://www.ibm.com/support/pages/sites/default/files/inline-files/$FILE/analyze_DB2_formulas_v1_14.zip)
 
-* https://www.ibm.com/support/pages/system/files/inline-files/analyze_DB2_formulas_v1_15.zip
+* [Version 1.15](https://www.ibm.com/support/pages/system/files/inline-files/analyze_DB2_formulas_v1_15.zip)
 
-[2] DB2 scripts: https://gitlab-ce.gwdg.de/bnachtw/TSM-Scripts/-/tree/master/DB2-scripts
+[2] DB2 scripts: https://github.com/bnw4cristie/DB2
 
-----
+[3] [IBM extended Guide to DB2 offline Reorg ](https://www.ibm.com/support/pages/resolving-and-preventing-issues-related-database-growth-and-degraded-performance-tivoli-storage-manager-v711200-and-later-servers#offline_table)
 
-# DB2 Offline Reorganization Guide by IBM
-
-https://www.ibm.com/support/pages/resolving-and-preventing-issues-related-database-growth-and-degraded-performance-tivoli-storage-manager-v711200-and-later-servers#offline_table
-
-# Further Information
-## Reclaimable Tables
-due to the [IBM Documentation](https://www.ibm.com/support/pages/steps-reclaim-all-available-space-reclaimable-storage-dms-automatic-storage-tablespace) the following commands shows all tables that are suitable for Reorganization 
-
-```
-db2 "SELECT varchar(tbsp_name, 30) as tbsp_name, tbsp_type, RECLAIMABLE_SPACE_ENABLED FROM TABLE(MON_GET_TABLESPACE('',-2))"
-```
-issueing it shows
-```
-~$ db2 "SELECT varchar(tbsp_name, 30) as tbsp_name, tbsp_type, RECLAIMABLE_SPACE_ENABLED FROM TABLE(MON_GET_TABLESPACE('',-2))"
-
-TBSP_NAME                      TBSP_TYPE  RECLAIMABLE_SPACE_ENABLED
------------------------------- ---------- -------------------------
-SYSCATSPACE                    DMS                                1
-TEMPSPACE1                     SMS                                0
-USERSPACE1                     DMS                                1
-IDXSPACE1                      DMS                                1
-LARGEIDXSPACE1                 DMS                                1
-LARGESPACE1                    DMS                                1
-LGTMPTSP                       SMS                                0
-REPLTBLSPACE1                  DMS                                1
-REPLIDXSPACE1                  DMS                                1
-TSMTEMP                        SMS                                0
-ARCHOBJDATASPACE               DMS                                1
-ARCHOBJIDXSPACE                DMS                                1
-BACKOBJDATASPACE               DMS                                1
-BACKOBJIDXSPACE                DMS                                1
-BFABFDATASPACE                 DMS                                1
-BFABFIDXSPACE                  DMS                                1
-BFBFEXTDATASPACE               DMS                                1
-BFBFEXTIDXSPACE                DMS                                1
-DEDUPTBLSPACE1                 DMS                                1
-DEDUPIDXSPACE1                 DMS                                1
-DEDUPTBLSPACE2                 DMS                                1
-DEDUPIDXSPACE2                 DMS                                1
-DEDUPTBLSPACE3                 DMS                                1
-DEDUPIDXSPACE3                 DMS                                1
-DEDUPTBLSPACE4                 DMS                                1
-DEDUPIDXSPACE4                 DMS                                1
-DEDUPTBLSPACE5                 DMS                                1
-DEDUPIDXSPACE5                 DMS                                1
-SYSTOOLSPACE                   DMS                                1
-SYSTOOLSTMPSPACE               SMS                                0
-
-  30 record(s) selected.
-```
-as it looks, only tables of `TBSP_TYPE='DMS'` are suitable, so the select can be modified like this
-`db2 "SELECT varchar(tbsp_name, 30) as tbsp_name FROM TABLE(MON_GET_TABLESPACE('',-2)) WHERE tbsp_type='DMS'"`
-giving 
-```
-~$ db2 "SELECT varchar(tbsp_name, 30) as tbsp_name FROM TABLE(MON_GET_TABLESPACE('',-2)) WHERE tbsp_type='DMS'"
-
-TBSP_NAME
-------------------------------
-SYSCATSPACE
-USERSPACE1
-IDXSPACE1
-LARGEIDXSPACE1
-LARGESPACE1
-REPLTBLSPACE1
-REPLIDXSPACE1
-ARCHOBJDATASPACE
-ARCHOBJIDXSPACE
-BACKOBJDATASPACE
-BACKOBJIDXSPACE
-BFABFDATASPACE
-BFABFIDXSPACE
-BFBFEXTDATASPACE
-BFBFEXTIDXSPACE
-DEDUPTBLSPACE1
-DEDUPIDXSPACE1
-DEDUPTBLSPACE2
-DEDUPIDXSPACE2
-DEDUPTBLSPACE3
-DEDUPIDXSPACE3
-DEDUPTBLSPACE4
-DEDUPIDXSPACE4
-DEDUPTBLSPACE5
-DEDUPIDXSPACE5
-SYSTOOLSPACE
-
-  26 record(s) selected.
-``` 
-### Derive db2 selects from table of "reclaimable tables"
-```
-
-```
+[4] [GNU Screen Project](https://www.gnu.org/software/screen/)
