@@ -1,4 +1,5 @@
 # Db2 OfflineReOrg _using temporary table space_
+
 <!--
 ##############################################################################
 # changelog
@@ -56,17 +57,21 @@
   e.g. by `export tpath=/stageX/`
 
 ## Advises
+
 - Copy the shown commands as a template and remove all lines according tables you don't want to reorganize
 - Copy _trailing blank line_ in the templates, so _all_ commands will be executed step-by-step including the last one
 ---
 ---
+
 ## [ToDo|WIP|Done] determine potential of ReOrg
+
 IBM offers a Perl script combining all the necessary SQL requests and putting the data together [1],[2]. So just run this script:
 
 ```bash
 su - tsmXYZ
 perl -f /OfflineReOrg/bin/analyze_DB2_formulas.pl
 ```
+
 ### [ ] Check `summary.out` file for suitable tables to reorganize
 
 ```bash
@@ -90,6 +95,7 @@ END SUMMARY
 * The lines starting with `IF` show tables and the estimated space that can be freed after reoganziation of the table
 
 ### [ ] Selecting tables
+
 consider
   * the amount that can be freed in relationship with the whole Db2 size:
     * small wins are not useful as reorganiaztion costs time and do not really speed up db2 operations
