@@ -44,7 +44,7 @@ then
 fi
 
 # print headline
-printf "%25s ; %15s ; %15s ; %15s ; %15s ; %10s \n" "Tabname" "object-Count" "est. time (sec)" "object-space" "space needed" "Pagesize"
+printf "%25s ; %15s ; %15s ; %15s ; %25s ; %10s \n" "Tabname" "object-Count" "est. time (sec)" "object-space" "space occupied by table" "Pagesize"
 
 # for loop on *all* tables
 for tab in ACTIVITY_LOG AF_SEGMENTS AF_BITFILES ARCHIVE_OBJECTS AS_SEGMENTS BACKUP_OBJECTS BF_AGGREGATE_ATTRIBUTES BF_AGGREGATED_BITFILES BF_BITFILE_EXTENTS BF_DEREFERENCED_CHUNKS GROUP_LEADERS EXPORT_OBJECTS REPLICATED_OBJECTS SC_OBJECT_TRACKER TSMMON_STATUS
@@ -56,8 +56,10 @@ do
 	pages=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "select t1.PAGESIZE from syscat.tablespaces t1 left join syscat.tables t2 on (t1.TBSPACEID=t2.TBSPACEID) where t2.tabname='$tab'" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//');
 	pagesize=$(awk "BEGIN {print ($pages / 1024)}")
 	
-	printf "%25s ; %15d ; %15.3f ; %15d ; %12.3f GB ; %9sK \n" $tab $count $estim $tabsize $tabspace $pagesize
+	printf "%25s ; %15d ; %15.3f ; %15d ; %22.3f GB ; %9sK \n" $tab $count $estim $tabsize $tabspace $pagesize
 done
 
-printf "\n Info:\n;"
-printf "you can list all possible tables by issueing 'db2 list tables for schema tsmdb1' as instance after 'db2 connect to tsmdb1'\n";
+printf "\n Info:\n";
+printf "you can list all possible tables by issueing \n";
+printf "\tdb2 \"select TABNAME from syscat.tables where TABSCHEMA='TSMDB1' and TYPE='T' order by TABNAME\" | grep -v \"^ \"\n";
+printf "as instance after 'db2 connect to tsmdb1'\n";
