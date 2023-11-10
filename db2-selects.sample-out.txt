@@ -1,0 +1,25 @@
+$ bash db2-selects.sh 
+                  Tabname ;    object-Count ; est. time (sec) ;    object-space ;   space occupied by table ;   Pagesize 
+             ACTIVITY_LOG ;         1099040 ;           7.850 ;       137389392 ;                  0.128 GB ;        16K 
+              AF_SEGMENTS ;             226 ;           0.002 ;           11300 ;                  0.000 GB ;        16K 
+              AF_BITFILES ;             226 ;           0.002 ;           15142 ;                  0.000 GB ;        16K 
+          ARCHIVE_OBJECTS ;               0 ;           0.000 ;               0 ;                  0.000 GB ;        32K 
+              AS_SEGMENTS ;             226 ;           0.002 ;           29154 ;                  0.000 GB ;        16K 
+           BACKUP_OBJECTS ;          501131 ;           3.580 ;       194438832 ;                  0.181 GB ;        32K 
+  BF_AGGREGATE_ATTRIBUTES ;             210 ;           0.001 ;           12810 ;                  0.000 GB ;        16K 
+   BF_AGGREGATED_BITFILES ;          139183 ;           0.994 ;         5447072 ;                  0.005 GB ;        16K 
+       BF_BITFILE_EXTENTS ;               0 ;           0.000 ;               0 ;                  0.000 GB ;        16K 
+   BF_DEREFERENCED_CHUNKS ;               0 ;           0.000 ;               0 ;                  0.000 GB ;        16K 
+            GROUP_LEADERS ;          295502 ;           2.111 ;         9456064 ;                  0.009 GB ;        16K 
+           EXPORT_OBJECTS ;               0 ;           0.000 ;               0 ;                  0.000 GB ;        16K 
+       REPLICATED_OBJECTS ;          266842 ;           1.906 ;        11738452 ;                  0.011 GB ;         8K 
+        SC_OBJECT_TRACKER ;          336199 ;           2.401 ;         9077373 ;                  0.008 GB ;        16K 
+       SD_CHUNK_LOCATIONS ;          242441 ;           1.732 ;        22062132 ;                  0.021 GB ;        16K 
+           SD_RECON_ORDER ;          671016 ;           4.793 ;        20130480 ;                  0.019 GB ;        16K 
+     SD_REPLICATED_CHUNKS ;               0 ;           0.000 ;               0 ;                  0.000 GB ;        16K 
+            TSMMON_STATUS ;          666714 ;           4.762 ;        55349132 ;                  0.052 GB ;        16K 
+
+ Info:
+you can list all possible tables by issueing 
+        db2 "select TABNAME from syscat.tables where TABSCHEMA='TSMDB1' and TYPE='T' order by TABNAME" | grep -v "^ "
+as instance after 'db2 connect to tsmdb1'
