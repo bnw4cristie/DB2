@@ -2,16 +2,17 @@
 
 ##############################################################################
 # changelog
-# date     	version	remark
-# 2023-11-10	0.1.2	moved table names to array for easy adapt
-# 2023-02-20	0.1.1	added some tables + info on list 
-# 2020-08-12	0.1.0   first version put to gitlab
-# 2020-08-XX	0.0.1   initial coding using bash
+# date        version remark
+# 2023-11-10  0.1.2b  replaces tabs with 2 spaces  	
+# 2023-11-10  0.1.2   moved table names to array for easy adapt
+# 2023-02-20  0.1.1   added some tables + info on list 
+# 2020-08-12  0.1.0   first version put to gitlab
+# 2020-08-XX  0.0.1   initial coding using bash
 #
 ##############################################################################
 #
-#	db-selects.sh
-#	
+# db-selects.sh
+# 
 #   a script collecting some information from DB2 for offline reorg
 #
 #   The Author:
@@ -40,26 +41,26 @@
 # check if user isn't root (so maybe the instance user)
 if [ $USER == "root" ]
 then
-	echo "script must run as instance user, not ROOT!"
-	exit;
+  echo "script must run as instance user, not ROOT!"
+  exit;
 fi
 
 # define tables to analyse
-tables=("ACTIVITY_LOG"				\
-		"AF_SEGMENTS"				\
-		"AF_BITFILES"				\
-		"ARCHIVE_OBJECTS" 			\
-		"AS_SEGMENTS"				\
-		"BACKUP_OBJECTS"			\
-		"BF_AGGREGATE_ATTRIBUTES"	\
-		"BF_AGGREGATED_BITFILES"	\
-		"BF_BITFILE_EXTENTS"		\
-		"BF_DEREFERENCED_CHUNKS"	\
-		"GROUP_LEADERS"				\
-		"EXPORT_OBJECTS"			\
-		"REPLICATED_OBJECTS"		\
-		"SC_OBJECT_TRACKER"			\
-		"TSMMON_STATUS"				)
+tables=("ACTIVITY_LOG"        \
+    "AF_SEGMENTS"             \
+    "AF_BITFILES"             \
+    "ARCHIVE_OBJECTS"         \
+    "AS_SEGMENTS"             \
+    "BACKUP_OBJECTS"          \
+    "BF_AGGREGATE_ATTRIBUTES" \
+    "BF_AGGREGATED_BITFILES"  \
+    "BF_BITFILE_EXTENTS"      \
+    "BF_DEREFERENCED_CHUNKS"  \
+    "GROUP_LEADERS"           \
+    "EXPORT_OBJECTS"          \
+    "REPLICATED_OBJECTS"      \
+    "SC_OBJECT_TRACKER"       \
+    "TSMMON_STATUS"           )
 
 
 # print headline
@@ -68,14 +69,14 @@ printf "%25s ; %15s ; %15s ; %15s ; %25s ; %10s \n" "Tabname" "object-Count" "es
 # for loop on *all* tables
 for tab in ${tables[0]}
 do
-	count=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "select count_big(*) from tsmdb1.$tab" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//');
-	estim=$(awk "BEGIN {print ($count / 140000)}");
-	tabsize=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "call sysproc.reorgchk_tb_stats('T','tsmdb1.$tab')" > /dev/null && db2 "select tsize from session.tb_stats" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//') ;
-	tabspace=$(awk "BEGIN {print ($tabsize / 1024 / 1024 / 1024)}")
-	pages=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "select t1.PAGESIZE from syscat.tablespaces t1 left join syscat.tables t2 on (t1.TBSPACEID=t2.TBSPACEID) where t2.tabname='$tab'" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//');
-	pagesize=$(awk "BEGIN {print ($pages / 1024)}")
-	
-	printf "%25s ; %15d ; %15.3f ; %15d ; %22.3f GB ; %9sK \n" $tab $count $estim $tabsize $tabspace $pagesize
+  count=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "select count_big(*) from tsmdb1.$tab" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//');
+  estim=$(awk "BEGIN {print ($count / 140000)}");
+  tabsize=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "call sysproc.reorgchk_tb_stats('T','tsmdb1.$tab')" > /dev/null && db2 "select tsize from session.tb_stats" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//') ;
+  tabspace=$(awk "BEGIN {print ($tabsize / 1024 / 1024 / 1024)}")
+  pages=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "select t1.PAGESIZE from syscat.tablespaces t1 left join syscat.tables t2 on (t1.TBSPACEID=t2.TBSPACEID) where t2.tabname='$tab'" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//');
+  pagesize=$(awk "BEGIN {print ($pages / 1024)}")
+  
+  printf "%25s ; %15d ; %15.3f ; %15d ; %22.3f GB ; %9sK \n" $tab $count $estim $tabsize $tabspace $pagesize
 done
 
 printf "\n Info:\n";
