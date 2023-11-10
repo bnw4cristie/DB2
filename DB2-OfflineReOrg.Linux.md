@@ -4,6 +4,7 @@
 ##############################################################################
 # changelog
 # date          version remark
+# 2023-11-10    0.2.2   add some remarks
 # 2023-09-21    0.2.1   add subsection "check summary file" and "selecting tabels"
 #                       some minor fixes 
 # 2023-09-20    0.2.0   adding this comments, Copyrights into file 
@@ -41,15 +42,20 @@
 ##############################################################################
 -->
 
- Short track for Linux Servers
+As now this pad may be used by others, I added some sources at the bottom :-)
+
+# Short track for Linux Servers
+
+(C) 2023 by tsm@bjoernsoe.net, bjoern.nachtwey@cristie.de
 
 ## Assumptions
+- the instance user is named `tsmXYZ` 
+  => can easily replaced by 
+  `sed -e 's#tsmXYZ#<real user name#g' <this file> > <new file>` 
 
-- the instance user is named `tsmXYZ` , 
-  it's home directory is `/tsmXYZ` 
-  the server config is located at `/tsmXYZ/config`
-  
-  => can easily replaced by `sed -e 's#tsmXYZ#<real user name#g' <this file> > <new file>`
+- it's home directory is `/tsmXYZ` 
+
+- the server config is located at `/tsmXYZ/config`
 
 - there's a path `/OfflineReOrg` or a symlink of this name directing to a folder containing the anaylysis scripts and where to put the output
 
@@ -73,6 +79,8 @@ perl -f /OfflineReOrg/bin/analyze_DB2_formulas.pl
 ```
 
 ### [ ] Check `summary.out` file for suitable tables to reorganize
+
+Running the script, it creates a folder with the actual date-time stamp. Besides many detailed information, there's also a summary to look on:
 
 ```bash
 cat \OfflineReOrg\20230921-0755\summary.out
@@ -104,6 +112,8 @@ consider
 **BUT:** Doing Offline Reoganizations for many times, I observered it often reclaims about 50% more space than estimated by the script [1] :-)
 
 ## [ ] Get Pagessize and estimate temporary space needed
+
+as this means issuing some commands for each table, it's easier combine them in a script:
 
 _as instance user_ run script `db-selects.sh` [2]
 
