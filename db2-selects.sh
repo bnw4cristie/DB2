@@ -46,7 +46,8 @@ then
 fi
 
 # define tables to analyse
-tables=("ACTIVITY_LOG"        \
+tables=(                      \
+    "ACTIVITY_LOG"            \
     "AF_SEGMENTS"             \
     "AF_BITFILES"             \
     "ARCHIVE_OBJECTS"         \
@@ -62,12 +63,18 @@ tables=("ACTIVITY_LOG"        \
     "SC_OBJECT_TRACKER"       \
     "TSMMON_STATUS"           )
 
+# possible further tables
+#    "SD_CHUNK_LOCATIONS"     \       
+#    "SD_RECON_ORDER"         \
+#    "SD_REPLICATED_CHUNKS"   \
+
+"
 
 # print headline
 printf "%25s ; %15s ; %15s ; %15s ; %25s ; %10s \n" "Tabname" "object-Count" "est. time (sec)" "object-space" "space occupied by table" "Pagesize"
 
 # for loop on *all* tables
-for tab in ${tables[0]}
+for tab in ${tables[@]}
 do
   count=$(db2 connect to tsmdb1 2>&1>/dev/null && db2 "select count_big(*) from tsmdb1.$tab" | tail -n 4 | head -n 1 | sed -e 's/ //g' -e 's/\.$//');
   estim=$(awk "BEGIN {print ($count / 140000)}");
